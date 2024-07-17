@@ -68,11 +68,12 @@ def extract_task_info(dataset_path, task_name, filter_key=None, verbose=False):
                 ee_states = ee_states.tolist()
                 gripper_states = gripper_states.tolist()
                 episode_actions.append(np.array([ee_states, gripper_states]))
-                episode_actions = np.array(episode_actions)
                 
                 obs_img = f[f"data/{ep}/obs/agentview_rgb"][i]
                 episode_images.append(obs_img)
-                
+            
+            episode_actions = np.array(episode_actions)
+            
             actions_batch.append(episode_actions)
             images_batch.append(episode_images)
         
