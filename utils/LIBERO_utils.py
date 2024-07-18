@@ -3,6 +3,18 @@ import h5py
 import json
 import numpy as np
 import cv2
+import robomimic.utils.obs_utils as ObsUtils
+import robomimic.utils.tensor_utils as TensorUtils
+import torch
+
+def safe_device(x, device="cpu"):
+    if device == "cpu":
+        return x.cpu()
+    elif "cuda" in device:
+        if torch.cuda.is_available():
+            return x.to(device)
+        else:
+            return x.cpu()
 
 def get_task_names(dataset_path):
     '''
@@ -52,12 +64,12 @@ def extract_task_info(dataset_path, task_name, filter_key=None, verbose=False):
         action_max = -np.inf
         actions_batch = []
         images_batch = []
-        
+
         for ep in demos:
             traj_lengths.append(f[f"data/{ep}/actions"].shape[0])
             action_min = min(action_min, np.min(f[f"data/{ep}/actions"][()]))
             action_max = max(action_max, np.max(f[f"data/{ep}/actions"][()]))
-            
+
             # Extract actions and observations
             episode_actions = []
             episode_images = []
@@ -65,17 +77,26 @@ def extract_task_info(dataset_path, task_name, filter_key=None, verbose=False):
             for i in range(num_samples):
                 ee_states = f[f"data/{ep}/obs/ee_states"][i]
                 gripper_states = f[f"data/{ep}/obs/gripper_states"][i]
-                ee_states = ee_states.tolist()
-                gripper_states = gripper_states.tolist()
-                episode_actions.append(np.array([ee_states, gripper_states]))
                 
+                # Ensure that states are numpy arrays of the same length
+                ee_states = np.array(ee_states).flatten()
+                gripper_states = np.array(gripper_states).flatten()
+                
+                # Stack ee_states and gripper_states horizontally
+                episode_actions.append(np.concatenate([ee_states, gripper_states]))
+
                 obs_img = f[f"data/{ep}/obs/agentview_rgb"][i]
                 episode_images.append(obs_img)
-            
+
             episode_actions = np.array(episode_actions)
+            episode_images = np.array(episode_images)
             
             actions_batch.append(episode_actions)
             images_batch.append(episode_images)
+
+        # Convert lists to numpy arrays with dtype=object if they contain ragged sequences
+        actions_batch = np.array(actions_batch, dtype=object)
+        images_batch = np.array(images_batch, dtype=object)
         
         traj_lengths = np.array(traj_lengths)
         
@@ -119,3 +140,59 @@ def extract_task_info(dataset_path, task_name, filter_key=None, verbose=False):
         print("")
         
         return language_instruction.strip(), actions_batch, images_batch
+    
+def extract_env_obs(obs, device_id):
+    '''
+    Extract RGB image from the environment observation.
+    Input: 
+        obs (dict) - environment observation
+        device_id (int) - device ID
+    Output: rgb_img (np.ndarray) - RGB image
+    '''
+    # Modality OpenVLA need (copied from LIBERO)
+    modality = {
+        "rgb": ["agentview_rgb"],
+        "depth": [],
+        "low_dim": ["gripper_states", "joint_states"]
+    }
+    obs_key_mapping = {
+        "agentview_rgb": "agentview_image",
+        "eye_in_hand_rgb": "robot0_eye_in_hand_image",
+        "gripper_states": "robot0_gripper_qpos",
+        "joint_states": "robot0_joint_pos"
+    }
+    # LIBERO obs modalities
+    # obs:
+    # modality:
+    #     rgb: ["agentview_rgb", "eye_in_hand_rgb"]
+    #     depth: []
+    #     low_dim: ["gripper_states", "joint_states"]
+    # LIBERO obs_key_mapping
+    # obs_key_mapping:
+    #     agentview_rgb: agentview_image
+    #     eye_in_hand_rgb: robot0_eye_in_hand_image
+    #     gripper_states: robot0_gripper_qpos
+    #     joint_states: robot0_joint_pos
+    
+    env_num = len(obs)
+    data = {}
+    all_obs_keys = []
+    for modality_name, modality_list in modality.items():
+        for obs_name in modality_list:
+            data[obs_name] = []
+        all_obs_keys += modality_list
+
+    for k in range(env_num):
+        for obs_name in all_obs_keys:
+            data[obs_name].append(
+                ObsUtils.process_obs(
+                    torch.from_numpy(obs[k][obs_key_mapping[obs_name]]),
+                    obs_key=obs_name,
+                ).float()
+            )
+
+    for key in data:
+        data[key] = torch.stack(data[key])
+
+    data = TensorUtils.map_tensor(data, lambda x: safe_device(x, device=device_id))
+    return data
