@@ -42,7 +42,7 @@ def extract_task_info(dataset_path, task_name, filter_key=None, verbose=False):
     file_path = os.path.join(dataset_path, f"{task_name}.hdf5")
     with h5py.File(file_path, "r") as f:
         if filter_key is not None:
-            print(f"NOTE: using filter key {filter_key}")
+            # print(f"NOTE: using filter key {filter_key}")
             demos = sorted([elem.decode("utf-8") for elem in np.array(f[f"mask/{filter_key}"])])
         else:
             demos = sorted(list(f["data"].keys()))
@@ -94,7 +94,7 @@ def extract_task_info(dataset_path, task_name, filter_key=None, verbose=False):
             actions_batch.append(episode_actions)
             images_batch.append(episode_images)
 
-        # Convert lists to numpy arrays with dtype=object if they contain ragged sequences
+        # Convert lists to numpy arrays
         actions_batch = np.array(actions_batch, dtype=object)
         images_batch = np.array(images_batch, dtype=object)
         
@@ -103,17 +103,17 @@ def extract_task_info(dataset_path, task_name, filter_key=None, verbose=False):
         problem_info = json.loads(f["data"].attrs["problem_info"])
         language_instruction = "".join(problem_info["language_instruction"])
         
-        print("")
-        print(f"Task: {task_name}")
-        print(f"Total transitions: {np.sum(traj_lengths)}")
-        print(f"Total trajectories: {traj_lengths.shape[0]}")
-        print(f"Trajectory length mean: {np.mean(traj_lengths)}")
-        print(f"Trajectory length std: {np.std(traj_lengths)}")
-        print(f"Trajectory length min: {np.min(traj_lengths)}")
-        print(f"Trajectory length max: {np.max(traj_lengths)}")
-        print(f"Action min: {action_min}")
-        print(f"Action max: {action_max}")
-        print(f"Language instruction: {language_instruction.strip()}")
+        # print("")
+        # print(f"Task: {task_name}")
+        # print(f"Total transitions: {np.sum(traj_lengths)}")
+        # print(f"Total trajectories: {traj_lengths.shape[0]}")
+        # print(f"Trajectory length mean: {np.mean(traj_lengths)}")
+        # print(f"Trajectory length std: {np.std(traj_lengths)}")
+        # print(f"Trajectory length min: {np.min(traj_lengths)}")
+        # print(f"Trajectory length max: {np.max(traj_lengths)}")
+        # print(f"Action min: {action_min}")
+        # print(f"Action max: {action_max}")
+        # print(f"Language instruction: {language_instruction.strip()}")
 
         if "mask" in f and filter_key is None:
             all_filter_keys = {}
@@ -121,23 +121,27 @@ def extract_task_info(dataset_path, task_name, filter_key=None, verbose=False):
                 fk_demos = sorted([elem.decode("utf-8") for elem in np.array(f[f"mask/{fk}"])])
                 all_filter_keys[fk] = fk_demos
             
-            print("==== Filter Keys ====")
+            # print("==== Filter Keys ====")
             for fk in all_filter_keys:
-                print(f"Filter key {fk} with {len(all_filter_keys[fk])} demos")
+                pass
+                # print(f"Filter key {fk} with {len(all_filter_keys[fk])} demos")
         else:
-            print("No filter keys")
+            pass
+            # print("No filter keys")
         
         if verbose:
             if "mask" in f and filter_key is None:
-                print("==== Filter Key Contents ====")
+                pass
+                # print("==== Filter Key Contents ====")
                 for fk in all_filter_keys:
-                    print(f"Filter key {fk} with {len(all_filter_keys[fk])} demos: {all_filter_keys[fk]}")
-            print("")
+                    pass
+                    # print(f"Filter key {fk} with {len(all_filter_keys[fk])} demos: {all_filter_keys[fk]}")
+            # print("")
         
-        env_meta = json.loads(f["data"].attrs["env_args"])
-        print("==== Env Meta ====")
-        print(json.dumps(env_meta, indent=4))
-        print("")
+        # env_meta = json.loads(f["data"].attrs["env_args"])
+        # print("==== Env Meta ====")
+        # print(json.dumps(env_meta, indent=4))
+        # print("")
         
         return language_instruction.strip(), actions_batch, images_batch
     
