@@ -86,6 +86,8 @@ def extract_task_info(dataset_path, task_name, filter_key=None, verbose=False):
                 episode_actions.append(np.concatenate([ee_states, gripper_states]))
 
                 obs_img = f[f"data/{ep}/obs/agentview_rgb"][i]
+                # due to coordinate definition in the dataset, we need to flip the image upside down
+                obs_img = cv2.flip(obs_img, 0)
                 episode_images.append(obs_img)
 
             episode_actions = np.array(episode_actions)
