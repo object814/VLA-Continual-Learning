@@ -29,12 +29,29 @@ pip install -r requirements.txt
 git submodule update --init --recursive
 ```
 
-Install LIBERO dataset dependencies:
+Install LIBERO:
 
 ```bash
 cd external/LIBERO/
 pip install -e .
 ```
+
+Install dlimp:
+
+```bash
+cd external/dlimp/
+pip install -e .
+```
+
+Install openvla:
+
+```bash
+cd external/openvla/
+pip install -e .
+```
+
+**Note:**\
+ We are using Python==3.8 even though lots of original dependencies in openvla and dlimp requires Python==3.11, our experience is that install the pip dependencies with conflicts to the latest version under Python==3.8 and it works
 
 To check if LIBERO is installed successfully, run the following command:
 

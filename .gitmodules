@@ -4,3 +4,6 @@
 [submodule "external/openvla"]
 	path = external/openvla
 	url = https://github.com/openvla/openvla.git
+[submodule "external/dlimp"]
+	path = external/dlimp
+	url = https://github.com/kvablack/dlimp
