@@ -23,6 +23,7 @@ from easydict import EasyDict
 from transformers import AutoModelForVision2Seq, AutoProcessor
 from utils.LIBERO_utils import get_task_names, extract_task_info
 import cv2
+import numpy as np
 
 # Check dataset path
 BENCHMARK_PATH = get_libero_path("benchmark_root")
@@ -39,7 +40,8 @@ dataset_path_demo = os.path.join(DATASET_BASE_PATH, DATASET_NAME)
 print(f"Dataset path: {dataset_path_demo}")
 
 # Video folder
-video_folder = os.path.join(VLA_BASE_PATH, "videos")
+VIDEO_FOLDER = os.path.join(VLA_BASE_PATH, "demo_record/videos")
+ACTION_FOLDER = os.path.join(VLA_BASE_PATH, "demo_record/actions")
 
 # Load dataset
 # use a dictionary to store demonstration data for each task
@@ -53,24 +55,32 @@ for task_name_demo in task_names_demo:
     [language_instruction, actions_batch, images_batch] = extract_task_info(dataset_path_demo, task_name_demo, filter_key=FILTER_KEY, verbose=VERBOSE)
     demonstration_data[task_name_demo] = [language_instruction, actions_batch, images_batch]
     
-print(images_batch.shape) # 50 (50 demos)
-print(images_batch[0].shape) # (103, 128, 128, 3) (103 frames, 128x128 pixels, 3 channels)
+# print(images_batch.shape) # 50 (50 demos)
+# print(images_batch[0].shape) # (103, 128, 128, 3) (103 frames, 128x128 pixels, 3 channels)
 
-# create folders with language instructions under video_folder
+# create folders with language instructions under VIDEO_FOLDER
 for task_name_demo in task_names_demo:
-    task_folder = os.path.join(video_folder, task_name_demo)
-    os.makedirs(task_folder, exist_ok=True)
-    print(f"Created folder: {task_folder}")
+    task_folder_video = os.path.join(VIDEO_FOLDER, task_name_demo)
+    task_folder_action = os.path.join(ACTION_FOLDER, task_name_demo)
+    os.makedirs(task_folder_video, exist_ok=True)
+    os.makedirs(task_folder_action, exist_ok=True)
+    print(f"Created folder: {task_folder_video}")
+    print(f"Created folder: {task_folder_action}")
 
 # save videos using cv2
 for task_name_demo in task_names_demo:
-    task_folder = os.path.join(video_folder, task_name_demo)
+    task_folder_video = os.path.join(VIDEO_FOLDER, task_name_demo)
+    task_folder_action = os.path.join(ACTION_FOLDER, task_name_demo)
     language_instruction, actions_batch, images_batch = demonstration_data[task_name_demo]
     for i in range(len(images_batch)):
         frames = images_batch[i]
-        video_path = os.path.join(task_folder, f"{i}.mp4")
+        video_path = os.path.join(task_folder_video, f"{i}.mp4")
+        action_path = os.path.join(task_folder_action, f"{i}.npy")
         print(f"Saving video: {video_path}")
         out = cv2.VideoWriter(video_path, cv2.VideoWriter_fourcc(*'mp4v'), 30, (128, 128))
         for frame in frames:
             out.write(cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
         out.release()
+        print(f"Saving action: {action_path}")
+        print(actions_batch[i].shape)
+        np.save(action_path, actions_batch[i])

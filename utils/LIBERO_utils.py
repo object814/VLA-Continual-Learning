@@ -75,15 +75,17 @@ def extract_task_info(dataset_path, task_name, filter_key=None, verbose=False):
             episode_images = []
             num_samples = f[f"data/{ep}"].attrs["num_samples"]
             for i in range(num_samples):
-                ee_states = f[f"data/{ep}/obs/ee_states"][i]
-                gripper_states = f[f"data/{ep}/obs/gripper_states"][i]
+                action = f[f"data/{ep}/actions"][i]
+                action = np.array(action).flatten()
+                episode_actions.append(action)
                 
-                # Ensure that states are numpy arrays of the same length
-                ee_states = np.array(ee_states).flatten()
-                gripper_states = np.array(gripper_states).flatten()
-                
-                # Stack ee_states and gripper_states horizontally
-                episode_actions.append(np.concatenate([ee_states, gripper_states]))
+                # ee_states = f[f"data/{ep}/obs/ee_states"][i]
+                # gripper_states = f[f"data/{ep}/obs/gripper_states"][i]
+                # # Ensure that states are numpy arrays of the same length
+                # ee_states = np.array(ee_states).flatten()
+                # gripper_states = np.array(gripper_states).flatten()
+                # # Stack ee_states and gripper_states horizontally
+                # episode_actions.append(np.concatenate([ee_states, gripper_states]))
 
                 obs_img = f[f"data/{ep}/obs/agentview_rgb"][i]
                 # due to coordinate definition in the dataset, we need to flip the image upside down

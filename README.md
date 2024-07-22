@@ -45,13 +45,23 @@ pip install -e .
 
 Install openvla:
 
+Modify external/openvla/pyproject.toml [dependencies] to avoid error with Python=3.8:
+- remove "dlimp @ git+https://github.com/moojink/dlimp_openvla"
+- remove "torch==2.2.0", "torchvision>=0.16.0", "torchaudio"
+- remove "tensorflow==2.15.0", "tensorflow_datasets==4.9.3", "tensorflow_graphics==2021.12.3"
+
 ```bash
 cd external/openvla/
 pip install -e .
 ```
 
+
+
+You will encounter some error regarding to dependency conflicts, but as long as you see: **Successfully built openvla** and **Successfully installed openvla-0.0.3**, you are good to go
+
 **Note:**\
- We are using Python==3.8 even though lots of original dependencies in openvla and dlimp requires Python==3.11, our experience is that install the pip dependencies with conflicts to the latest version under Python==3.8 and it works
+ We are manually downgrading some of the dependency version to adapt Python=3.8 even though lots of original dependencies in openvla and dlimp requires Python=3.11\
+ You might want to change to Python=3.11 but will have to compact with LIBERO
 
 To check if LIBERO is installed successfully, run the following command:
 

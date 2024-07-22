@@ -1,3 +1,5 @@
 /notebooks/*
 !/notebooks/*.ipynb
 /videos
+/demo_record
+/eval_record
