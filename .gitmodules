@@ -7,3 +7,6 @@
 [submodule "external/dlimp"]
 	path = external/dlimp
 	url = https://github.com/kvablack/dlimp
+[submodule "external/rlds_dataset_builder"]
+	path = external/rlds_dataset_builder
+	url = https://github.com/kpertsch/rlds_dataset_builder.git

@@ -27,3 +27,6 @@ json-numpy
 protobuf
 peft==0.11.1
 flash_attn==2.5.5
+tensorflow_hub
+apache_beam
+plotly
