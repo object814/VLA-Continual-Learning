@@ -6,7 +6,7 @@
 	url = https://github.com/object814/openvla-forked.git
 [submodule "external/dlimp"]
 	path = external/dlimp
-	url = https://github.com/object814/dlimp.git
+	url = https://github.com/object814/dlimp-forked.git
 [submodule "external/rlds_dataset_builder"]
 	path = external/rlds_dataset_builder
 	url = https://github.com/object814/rlds-dataset-builder.git
