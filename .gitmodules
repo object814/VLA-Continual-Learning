@@ -1,12 +1,12 @@
 [submodule "external/LIBERO"]
 	path = external/LIBERO
-	url = https://github.com/Lifelong-Robot-Learning/LIBERO.git
+	url = https://github.com/object814/LIBERO.git
 [submodule "external/openvla"]
 	path = external/openvla
-	url = https://github.com/openvla/openvla.git
+	url = https://github.com/object814/openvla.git
 [submodule "external/dlimp"]
 	path = external/dlimp
-	url = https://github.com/kvablack/dlimp
+	url = https://github.com/object814/dlimp.git
 [submodule "external/rlds_dataset_builder"]
 	path = external/rlds_dataset_builder
-	url = https://github.com/kpertsch/rlds_dataset_builder.git
+	url = https://github.com/object814/rlds-dataset-builder.git
