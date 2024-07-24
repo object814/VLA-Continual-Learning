@@ -16,6 +16,7 @@ tokenizers==0.19.1
 # dlimp requirements
 tensorflow==2.15.0
 tensorflow_datasets==4.9.6
+tensorflow_graphics==2021.12.3
 tqdm
 tqdm-multiprocess==0.0.11
 # rlds-dataset requirements
