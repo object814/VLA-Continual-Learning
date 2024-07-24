@@ -3,7 +3,7 @@
 	url = https://github.com/object814/LIBERO-forked.git
 [submodule "external/openvla"]
 	path = external/openvla
-	url = https://github.com/object814/openvla.git
+	url = https://github.com/object814/openvla-forked.git
 [submodule "external/dlimp"]
 	path = external/dlimp
 	url = https://github.com/object814/dlimp.git
