@@ -1,6 +1,6 @@
 [submodule "external/LIBERO"]
 	path = external/LIBERO
-	url = https://github.com/object814/LIBERO.git
+	url = https://github.com/object814/LIBERO-forked.git
 [submodule "external/openvla"]
 	path = external/openvla
 	url = https://github.com/object814/openvla.git
