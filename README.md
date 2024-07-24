@@ -12,7 +12,7 @@ git clone https://github.com/object814/VLA-Continual-Learning.git
 We are using conda to manage python environment:
 
 ```bash
-conda create -n ENV_NAME python==3.8
+conda create -n ENV_NAME python==3.10
 conda activate ENV_NAME
 ```
 
@@ -25,7 +25,7 @@ pip install torch==2.2.0 torchvision==0.17.0 torchaudio==2.2.0 --index-url https
 Install dependencies and add LIBERO dataset:
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements_310.txt
 git submodule update --init --recursive
 ```
 
