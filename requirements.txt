@@ -13,6 +13,7 @@ gym==0.25.2
 # openvla requirements
 timm==0.9.10
 tokenizers==0.19.1
+flash-attn==2.5.5
 # dlimp requirements
 tensorflow==2.15.0
 tensorflow_datasets==4.9.6
