@@ -10,3 +10,6 @@
 [submodule "external/rlds_dataset_builder"]
 	path = external/rlds_dataset_builder
 	url = https://github.com/object814/rlds_dataset_builder-forked.git
+[submodule "external/l2p-pytorch"]
+	path = external/l2p-pytorch
+	url = https://github.com/object814/l2p-pytorch_forked.git
